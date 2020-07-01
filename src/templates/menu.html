@@ -1,0 +1,54 @@
+<nav class="nav">
+  <ul>
+    {% for handle in sections %}
+      {% set curSection = craft.app.sections.getSectionByHandle(handle) %}
+      {% set counter = 0 %}
+
+      {% if curSection.type == 'single' %}
+        {% set page = craft.entries.section(curSection).one() %}
+        <li>
+          <a href="{{ page.url }}">{{ page.title }}</a>
+        </li>
+      {% else %}
+        {% set entries = craft.entries.section(curSection).level(level).all() %}
+        {% set slugs = craft.app.request.segments %}
+
+        {% for page in entries %}
+          {% set hasChildren = page.getChildren().count() %}
+          {% set counter = counter + 1 %}
+      
+          <li class="{% if hasChildren %}expandable{% endif %}{% if page.slug in slugs %} extended{% endif %}">
+            <a href="{{ page.url }}" class="{% if hasChildren %}dropdown{% endif %}">{{ page.title }}<span></span></a>
+      
+              {% if hasChildren and counter < limit %}
+                <ul class="dropdown-menu level{{page.level}} child-nav">
+                  {{ _self.subList(page, level+1, counter, limit) }}
+                </ul>
+              {% endif %}
+          </li>
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+  </ul>
+</nav>
+
+{% macro subList(parentPage, level, counter, limit) %}
+  {% set entries = parentPage.getChildren().level(level).all() %}
+  {% set slugs = craft.app.request.segments %}
+
+  {% for page in entries %}
+    {% set hasChildren = page.getChildren().count() %}
+    {% set counter = counter + 1 %}
+
+    <li class="{% if hasChildren %}expandable{% endif %}{% if page.slug in slugs %} extended{%endif%}">
+      <a href="{{ page.url }}">{{ page.title }}<span></span></a>
+
+        {% if hasChildren and counter < limit %}
+          <ul class="dropdown-menu level{{page.level}} child-nav">
+            {{ _self.subList(page, level+1, counter, limit) }}
+          </ul>
+        {% endif %}
+    
+    </li>
+  {% endfor %}
+{% endmacro %}

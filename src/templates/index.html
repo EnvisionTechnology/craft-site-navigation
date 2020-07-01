@@ -1,0 +1,65 @@
+{% extends '_layouts/cp' %}
+{% import '_includes/forms' as forms %}
+
+{% set title = 'Site Navigation' %}
+{% set sections = craft.siteNavigation.getSections() %}
+
+{% block content %}
+  <h2>Sections</h2>
+
+  {% if sections|length %}
+
+    {% set sectionRows = sections %}
+
+    <form method="POST">
+      <input type="hidden" name="action" value="{{ 'site-navigation/site-navigation/save-sections' }}">
+      {{ csrfInput() }}
+
+      {{ forms.editableTableField({
+          first: true,
+          label: "Section Settings",
+          instructions: "Choose which sections should be included in menu.",
+          id: 'sections',
+          name: 'sections',
+          cols: {
+              sectionName: {
+                  type: 'singleline',
+                  heading: "Section"
+              },
+              sectionHandle: {
+                  type: 'singleline',
+                  heading: "Handle"
+              },
+              includeInMenu: {
+                type: 'lightswitch',
+                class: 'thin',
+                heading: "Include in Menu"
+              }
+          },
+          rows: sectionRows,
+          staticRows: false,
+          minRows: sectionRows|length,
+          maxRows: sectionRows|length
+      }) }}
+
+      <input type="submit" class="btn submit" value="Save Settings">
+    </form>
+    {% else %}
+      <p>{{ "No sections available."|t('guest-entries') }}</p>
+    {% endif %}
+    
+  <hr>
+  <h2>Sample Display</h2>
+  
+  {{ craft.siteNavigation.render() }}
+
+  <style>
+    .nav ul {
+      margin-left: 1em;
+      list-style-type: disc;
+    }
+    .nav > ul > li {
+      margin-bottom: .5em;
+    }
+  </style>
+{% endblock %}
