@@ -16,7 +16,7 @@ use envision\sitenavigation\variables\SiteNavigationVariable;
 class SiteNavigation extends Plugin
 {
   public static $plugin;
-  public $hasCpSettings = true;
+  public $hasCpSettings = false;
 
   public function init()
   {

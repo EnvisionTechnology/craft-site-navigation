@@ -2,9 +2,11 @@
 
 ## Installation
 
-To install the plugin, install manually using composer.
+To install the plugin, manually add the package using composer.
 
 `composer require envision/craft-site-navigation`
+
+Then go to Settings > Plugins and choose to 'Install' the Site Navigation plugin.
 
 ## Settings
 
@@ -13,9 +15,11 @@ In the Control Panel, go to Site Navigation. There, select and reorganize sectio
 ## Display
 
 To display all pages in an ordered list, add this tag to your template:
+
 `{{ craft.siteNavigation.render() }}`
 
 Optionally, set how many levels to show. For example, a typical main navigation starting at the first level and only showing direct children would be:
+
 `{{ craft.siteNavigation.render(2) }}`
 
 ## Roadmap
